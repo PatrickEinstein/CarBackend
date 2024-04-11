@@ -23,7 +23,7 @@ export const register: RequestHandler = async (req, res, next) => {
   } = req.body;
 
   try {
-    if (!firstName || !lastName || email || !phoneNumber || !password) {
+    if (!firstName || !lastName || !email || !phoneNumber || !password) {
       return res.status(400).json({
         status: false,
         message:

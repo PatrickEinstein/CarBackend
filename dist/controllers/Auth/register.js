@@ -12,7 +12,7 @@ export const register = async (req, res, next) => {
     }
     const { firstName, lastName, email, phoneNumber, password, isAdmin, isActive, } = req.body;
     try {
-        if (!firstName || !lastName || email || !phoneNumber || !password) {
+        if (!firstName || !lastName || !email || !phoneNumber || !password) {
             return res.status(400).json({
                 status: false,
                 message: "you must provide the neccsary first name, last name phone number and email",
