@@ -2,8 +2,9 @@ import Product from "../../models/Product.js";
 import uploadResources from "../../config/Cloudinary.js";
 export const createProduct = async (req, res, next) => {
     const { name, price, location, createdBy, description, category } = req.body;
+    console.log({ name, price, location, createdBy, description, category });
     if (!name || !price || !location || !createdBy || !description || !category) {
-        res.status(400).json({
+        return res.status(400).json({
             status: false,
             message: "Please provide all necessary information",
         });
@@ -26,13 +27,14 @@ export const createProduct = async (req, res, next) => {
             Video,
         });
         newProduct.save();
-        res.status(201).json({
+        return res.status(201).json({
             status: true,
+            id: newProduct._id,
             message: `product '${newProduct.name}' was successfully created`,
         });
     }
     catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             status: true,
             message: err.message,
         });

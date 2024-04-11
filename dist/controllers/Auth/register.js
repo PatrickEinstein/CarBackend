@@ -12,13 +12,19 @@ export const register = async (req, res, next) => {
     }
     const { firstName, lastName, email, phoneNumber, password, isAdmin, isActive, } = req.body;
     try {
+        if (!firstName || !lastName || email || !phoneNumber || !password) {
+            return res.status(400).json({
+                status: false,
+                message: "you must provide the neccsary first name, last name phone number and email",
+            });
+        }
         const user = await User.findOne({ email });
         if (user) {
             return res
                 .status(400)
                 .json({ success: false, error: "Email already exists" });
         }
-        const displayImage = req.files[0] && await uploadResources(req.files[0].path, "Display");
+        const displayImage = req.files[0] && (await uploadResources(req.files[0].path, "Display"));
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
         const newUser = await new User({
@@ -37,7 +43,7 @@ export const register = async (req, res, next) => {
             password: undefined,
             __v: undefined,
         };
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "User registered successfully",
             responseData: newUserWithoutPassword,
@@ -47,7 +53,7 @@ export const register = async (req, res, next) => {
     }
     catch (error) {
         console.error("Registration error:", error);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             error: "Internal Server Error",
             responseMessage: "Failed",
